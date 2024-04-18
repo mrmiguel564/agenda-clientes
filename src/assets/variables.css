@@ -1,0 +1,14 @@
+/* assets/variables.css */
+:root {
+    --color-principal: #42b983;
+    --color-secundario: #35495e;
+    --IconButtonIconSize: 24px;
+    --IconButtonFullPadding: 6px;
+
+     --ButtonsV-padding: 6px;
+     --ButtonsH-padding:    12px;
+     --ButtonsSpacing:  8px;
+     --ButtonsRadius:   12px;  
+    
+  }
+  
