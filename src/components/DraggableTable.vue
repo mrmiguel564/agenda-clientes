@@ -5,7 +5,7 @@
         <tr>
           <th>
             <!-- Checkbox para seleccionar todos los items -->
-            <input type="checkbox" @change="toggleAllChecks" v-model="allChecked">
+            <input type="checkbox" @change="toggleAllChecks" :checked="allChecked">
             <!-- Ícono de lápiz para la edición (se puede reemplazar con un ícono real) -->
 
           </th>
@@ -55,7 +55,7 @@
             :class="{'drag-over': dragOverIndex === index}">
           <td style="width: 40px;">
             <div class="Vertical-middle">
-              <input type="checkbox" v-model="item.checked" @change="checkItemStatus">
+              <input type="checkbox" v-model="item.checked" @change="updateHeaderCheck">
 
  
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +128,7 @@ export default {
       this.draggedIndex = index;
       event.dataTransfer.effectAllowed = 'move';
       var dragIcon = document.createElement('div');
-      dragIcon.innerText = this.items[index].name; // Asegúrate de adaptar esta línea para que coincida con tus datos
+      dragIcon.innerText = this.items[index].name;
       dragIcon.style.color = 'white';
       dragIcon.style.backgroundColor = 'rgba(0,0,0,0.65)';
       dragIcon.style.padding = '10px';
@@ -139,24 +139,26 @@ export default {
     },
     dragOver(index, event) {
       event.preventDefault();
-      if (this.dragOverIndex !== index) {
-        this.dragOverIndex = index;
-      }
+      this.dragOverIndex = index;
     },
     drop(targetIndex) {
       const itemToMove = this.items.splice(this.draggedIndex, 1)[0];
       this.items.splice(targetIndex, 0, itemToMove);
-      this.dragOverIndex = -1; // Restablecer al soltar
+      this.dragOverIndex = -1;
       this.saveItems();
     },
     toggleAllChecks() {
-      this.allChecked = !this.allChecked; // Cambia el estado del checkbox del encabezado
+      this.allChecked = !this.allChecked;
       this.items.forEach(item => {
-        item.checked = this.allChecked; // Actualiza todos los items basado en el estado del checkbox del encabezado
+        item.checked = this.allChecked;
       });
     },
+    updateHeaderCheck() {
+      const allChecked = this.items.every(item => item.checked); // Verifica si todos los items están marcados
+      this.allChecked = allChecked; // Actualiza el checkbox del encabezado sin modificar los items
+    },
     checkItemStatus() {
-      this.allChecked = this.items.every(item => item.checked); // Verifica si todos los items están marcados
+      this.allChecked = this.items.every(item => item.checked);
     },
 
     saveItems() {
