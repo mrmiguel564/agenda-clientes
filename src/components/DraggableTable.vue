@@ -97,14 +97,11 @@ export default {
   name: 'DraggableTable',
   data() {
     return {
-      items: jsonData, // Aquí asignas tus datos JSON directamente a 'items'
+      items: this.fetchItems(), // Carga los items desde localStorage o usa datos predeterminados
       allChecked: false,
       draggedIndex: null, // Índice del elemento que se está arrastrando
     };
   },
-
-  
-
 
   methods: {
     dragStart(index, event) {
@@ -114,6 +111,14 @@ export default {
     drop(targetIndex) {
       const itemToMove = this.items.splice(this.draggedIndex, 1)[0];
       this.items.splice(targetIndex, 0, itemToMove);
+      this.saveItems(); // Guarda el nuevo orden después de mover un ítem
+    },
+    saveItems() {
+      localStorage.setItem('tableItems', JSON.stringify(this.items));
+    },
+    fetchItems() {
+      const items = localStorage.getItem('tableItems');
+      return items ? JSON.parse(items) : jsonData; // jsonData debería ser tu arreglo de datos predeterminado o importado
     },
     timeSince(dateString) {
       const now = new Date();
@@ -135,15 +140,17 @@ export default {
       if (minutes > 0) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
       return `hace ${seconds} segundo${seconds > 1 ? 's' : ''}`;
     }
+  },
+  mounted() {
+    this.items = this.fetchItems();
   }
-
 
 };
 </script>
 
 <style scoped>
 .dragging {
-  background-color: #f0f0f0;
+  background-color: #40a526;
 }
 
 .header-sorted {

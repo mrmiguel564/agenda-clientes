@@ -6,10 +6,8 @@
         <DeleteContactButton />
         <AddContactButton />
       </div>
-      <!-- Listado -->
-      
-
-    </div>
+    </div>  
+    <!-- Listado -->
     <DraggableTable />
   </div>
 </template>
