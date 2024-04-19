@@ -89,37 +89,16 @@
 
 
 <script>
-
-import jsonData from '@/assets/Contactos.json';
-
-
 export default {
   name: 'DraggableTable',
   data() {
     return {
-      items: this.fetchItems(), // Carga los items desde localStorage o usa datos predeterminados
+      items: [], // Inicializa los items como un arreglo vacío
       allChecked: false,
       draggedIndex: null, // Índice del elemento que se está arrastrando
     };
   },
-
   methods: {
-    dragStart(index, event) {
-      this.draggedIndex = index;
-      event.dataTransfer.effectAllowed = 'move';
-    },
-    drop(targetIndex) {
-      const itemToMove = this.items.splice(this.draggedIndex, 1)[0];
-      this.items.splice(targetIndex, 0, itemToMove);
-      this.saveItems(); // Guarda el nuevo orden después de mover un ítem
-    },
-    saveItems() {
-      localStorage.setItem('tableItems', JSON.stringify(this.items));
-    },
-    fetchItems() {
-      const items = localStorage.getItem('tableItems');
-      return items ? JSON.parse(items) : jsonData; // jsonData debería ser tu arreglo de datos predeterminado o importado
-    },
     timeSince(dateString) {
       const now = new Date();
       const past = new Date(dateString);
@@ -139,12 +118,27 @@ export default {
       if (hours > 0) return `hace ${hours} hora${hours > 1 ? 's' : ''}`;
       if (minutes > 0) return `hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
       return `hace ${seconds} segundo${seconds > 1 ? 's' : ''}`;
+    },
+    dragStart(index, event) {
+      this.draggedIndex = index;
+      event.dataTransfer.effectAllowed = 'move';
+    },
+    drop(targetIndex) {
+      const itemToMove = this.items.splice(this.draggedIndex, 1)[0];
+      this.items.splice(targetIndex, 0, itemToMove);
+      this.saveItems(); // Guarda el nuevo orden después de mover un ítem
+    },
+    saveItems() {
+      localStorage.setItem('tableItems', JSON.stringify(this.items));
+    },
+    fetchItems() {
+      const items = localStorage.getItem('tableItems');
+      this.items = items ? JSON.parse(items) : []; // Si no hay nada en localStorage, inicializa como arreglo vacío
     }
   },
   mounted() {
-    this.items = this.fetchItems();
+    this.fetchItems(); // Carga los datos cuando el componente se monta
   }
-
 };
 </script>
 

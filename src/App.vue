@@ -31,10 +31,36 @@ export default {
   props: {
     msg: String
   },
+  data() {
+    return {
+      items: []
+    };
+  },
   methods: {
-    handleSearch(value) {
-      console.log('Search value:', value); // Manejo del valor de búsqueda
+    async fetchItems() {
+      try {
+        const response = await fetch('https://ubapp.unabase.cc/app/users/search/random');
+        if (!response.ok) {
+          throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        this.items = await response.json();
+        localStorage.setItem('tableItems', JSON.stringify(this.items)); // Guarda en localStorage
+        console.log('Data received:', this.items);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
+    saveItems() {
+      localStorage.setItem('tableItems', JSON.stringify(this.items));
+    },
+    handleReorder(newOrder) {
+      this.items = newOrder;
+      this.saveItems();
     }
+  },
+  created() {
+    //localStorage.clear();
+    this.fetchItems();
   }
 }
 </script>
