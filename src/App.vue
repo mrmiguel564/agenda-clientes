@@ -58,10 +58,10 @@ export default {
       this.saveItems();
     }
   },
-  created() {
+/*   created() {
     //localStorage.clear();
     this.fetchItems();
-  }
+  } */
 }
 </script>
 
@@ -80,6 +80,8 @@ export default {
   border-radius: 10px;
   background-color: white;
   overflow: auto;
+  min-height: calc(100vh - 80px); /* Cambiar a variables */
+  
 }
 
 .container {

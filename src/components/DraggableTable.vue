@@ -12,15 +12,16 @@
           <th >
             <div class="header-sorted">
               Nombre
-                          <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-icon">
+            <svg width="6" height="6" viewBox="0 0 6 6" fill="none" xmlns="http://www.w3.org/2000/svg" class="sort-icon">
               <path d="M2.4345 5.31539C2.4055 5.28714 2.2815 5.18047 2.1795 5.0811C1.538 4.49854 0.488 2.97881 0.1675 2.18339C0.116 2.06259 0.007 1.75718 0 1.59401C0 1.43765 0.036 1.2886 0.109 1.14637C0.211 0.96907 0.3715 0.826839 0.561 0.748904C0.6925 0.698734 1.086 0.620799 1.093 0.620799C1.5235 0.542864 2.223 0.5 2.996 0.5C3.7325 0.5 4.4035 0.542864 4.8405 0.606673C4.8475 0.61398 5.3365 0.691914 5.504 0.777155C5.81 0.933512 6 1.23892 6 1.56576V1.59401C5.9925 1.80687 5.8025 2.25451 5.7955 2.25451C5.4745 3.00706 4.476 4.49172 3.8125 5.08841C3.8125 5.08841 3.642 5.25645 3.5355 5.32952C3.3825 5.4435 3.193 5.5 3.0035 5.5C2.792 5.5 2.595 5.43619 2.4345 5.31539Z" fill="#98A2B3"/>
-            
-            </svg>
+            </svg><!-- Debe Guardarse en assets pero despues tengo poco tiempo -->
             </div>
             
              
           </th>
-          <th>Roles</th>
+          <th >
+             <div class="header-sorted" >Roles</div>
+            </th>
           <th >
             <div class="header-sorted">
                           Organizaciones
@@ -47,12 +48,15 @@
       </thead>
       <tbody>
         <tr class="FilaContacto" v-for="(item, index) in items" :key="index" draggable="true"
-            @dragstart="dragStart(index, $event)" 
-            @dragover.prevent 
-            @drop="drop(index)">
+            @dragstart="dragStart(index, $event)"
+            @dragover="dragOver(index, $event)"
+            @dragleave="dragOverIndex = -1"
+            @drop="drop(index)"
+            :class="{'drag-over': dragOverIndex === index}">
           <td style="width: 40px;">
             <div class="Vertical-middle">
-              <input type="checkbox" v-model="item.checked">
+              <input type="checkbox" v-model="item.checked" @change="checkItemStatus">
+
  
               <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14.4451 2.20708C14.0953 2.20708 13.6594 2.34903 13.2086 2.79981L12.2128 3.7956L14.2044 5.78717L15.2002 4.79137C15.651 4.34058 15.7929 3.90469 15.7929 3.55492C15.7929 3.1949 15.6431 2.85767 15.3927 2.60728C15.1424 2.3569 14.8051 2.20708 14.4451 2.20708ZM16.2894 5.8806C16.9939 5.17611 17.3333 4.36043 17.3333 3.55492C17.3333 2.75965 17.0018 2.03787 16.482 1.51806C15.9621 0.998248 15.2404 0.666692 14.4451 0.666687C13.6396 0.666682 12.8239 1.00609 12.1194 1.71058L10.4591 3.37086L10.4586 3.37143L10.4573 3.37264L10.4567 3.37329L10.4552 3.3748L10.454 3.37602L10.4534 3.37664L2.011 11.819C1.72667 12.1033 1.52146 12.4569 1.41566 12.8449L0.722643 15.386C0.409033 16.5359 1.46416 17.591 2.61406 17.2774L5.15514 16.5844C5.54307 16.4786 5.89668 16.2733 6.18101 15.989L14.6239 7.5461L14.625 7.54504L14.6263 7.54368L14.627 7.54298L14.7485 7.42158L16.2894 5.8806ZM13.1152 6.8764L11.1236 4.88483L3.10023 12.9082C3.00545 13.003 2.93705 13.1209 2.90178 13.2502L2.20876 15.7913L4.74983 15.0982C4.87914 15.063 4.99701 14.9946 5.09179 14.8998L6.72802 13.2636L13.1152 6.8764ZM10.7379 3.40983C10.7379 3.40983 10.7379 3.40984 10.7379 3.40983V3.40983ZM14.2044 6.8764L14.6083 7.2803C14.6083 7.28029 14.6083 7.28031 14.6083 7.2803C14.5281 7.20008 14.4022 7.07415 14.2044 6.8764Z" fill="#98A2B3"/>
@@ -93,9 +97,10 @@ export default {
   name: 'DraggableTable',
   data() {
     return {
-      items: [], // Inicializa los items como un arreglo vacío
+      items: [],
       allChecked: false,
-      draggedIndex: null, // Índice del elemento que se está arrastrando
+      draggedIndex: null,
+      dragOverIndex: -1 // Nuevo estado para seguir el índice de 'dragover'
     };
   },
   methods: {
@@ -122,12 +127,38 @@ export default {
     dragStart(index, event) {
       this.draggedIndex = index;
       event.dataTransfer.effectAllowed = 'move';
+      var dragIcon = document.createElement('div');
+      dragIcon.innerText = this.items[index].name; // Asegúrate de adaptar esta línea para que coincida con tus datos
+      dragIcon.style.color = 'white';
+      dragIcon.style.backgroundColor = 'rgba(0,0,0,0.65)';
+      dragIcon.style.padding = '10px';
+      dragIcon.style.borderRadius = '5px';
+      document.body.appendChild(dragIcon);
+      event.dataTransfer.setDragImage(dragIcon, 0, 0);
+      setTimeout(() => document.body.removeChild(dragIcon), 0);
+    },
+    dragOver(index, event) {
+      event.preventDefault();
+      if (this.dragOverIndex !== index) {
+        this.dragOverIndex = index;
+      }
     },
     drop(targetIndex) {
       const itemToMove = this.items.splice(this.draggedIndex, 1)[0];
       this.items.splice(targetIndex, 0, itemToMove);
-      this.saveItems(); // Guarda el nuevo orden después de mover un ítem
+      this.dragOverIndex = -1; // Restablecer al soltar
+      this.saveItems();
     },
+    toggleAllChecks() {
+      this.allChecked = !this.allChecked; // Cambia el estado del checkbox del encabezado
+      this.items.forEach(item => {
+        item.checked = this.allChecked; // Actualiza todos los items basado en el estado del checkbox del encabezado
+      });
+    },
+    checkItemStatus() {
+      this.allChecked = this.items.every(item => item.checked); // Verifica si todos los items están marcados
+    },
+
     saveItems() {
       localStorage.setItem('tableItems', JSON.stringify(this.items));
     },
@@ -152,6 +183,7 @@ export default {
   display: flex;
   justify-content: space-between; /* Esto separa los elementos hijo */
   align-items: center; /* Alinea los elementos hijo verticalmente */
+  color: rgba(152, 162, 179, 1);
 }
 
 .Vertical-middle {
@@ -240,6 +272,12 @@ export default {
 .accordion-content td {
   padding: 16px;
 }
+.drag-over {
+  border-top: 3px solid rgba(25, 133, 109, 0.5);  /* Línea sólida para indicar el espacio */
+  margin-top: 10px; /* Espacio para simular que se abre un hueco */
+  padding-top: 10px; /* Opcional, dependiendo de tu diseño específico */
+}
+
 
 /* Estilos para el botón de detalles */
 
