@@ -36,6 +36,8 @@
 			<tbody>
 				<template v-for="(item, index) in items" :key="item._id">
 					<tr class="FilaContacto" draggable="true"
+
+						v-if="shouldShow(item)"
 						@dragstart="dragStart(index, $event)" @dragover="dragOver(index, $event)"
 						@dragleave="dragOverIndex = -1" @drop="drop(index)"
 						:class="{ 'drag-over': dragOverIndex === index }">
@@ -73,7 +75,7 @@
 					</tr>
 
 					<!-- Acordion -->
-						<tr>
+						<tr >
 							<td colspan="5" style="padding: 0%;">
 								<transition name="accordion" @before-enter="beforeEnter" @enter="enter" @leave="leave">
 									<div v-if="openAccordionId == item._id" class="ContainerAcordion" :class="{'expanded': openAccordionId == item._id}">
@@ -111,6 +113,8 @@
 <script>
 export default {
 	name: 'DraggableTable',
+	props: ['searchTerm'],
+
 	data() {
 		return {
 			items: [],
@@ -122,6 +126,13 @@ export default {
 		};
 	},
 	methods: {
+		shouldShow(item) {
+			// Si no hay searchTerm, mostrar todos los items
+			if (!this.searchTerm) return true;
+			// Asumiendo que item.name.first y item.name.last son las propiedades a filtrar
+			const fullName = `${item.name.first} ${item.name.last}`.toLowerCase();
+			return fullName.includes(this.searchTerm.toLowerCase());
+		},
 		deleteSelectedItems() {
 			this.items = this.items.filter(item => !item.checked);
 			this.saveItems();

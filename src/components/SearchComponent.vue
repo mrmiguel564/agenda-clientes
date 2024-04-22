@@ -1,6 +1,7 @@
 <template>
   <div class="search-box">
-    <input v-model="searchTerm" @input="handleInput" placeholder="Buscar" class="search-input">
+    <input :value="searchInput" @input="updateInput" placeholder="Buscar" class="search-input">
+ 
     <span class="icon">
       <i class="fa fa-search"></i>  
     </span>
@@ -9,16 +10,20 @@
 
 <script>
 export default {
+
   name: 'SearchComponent',
+  props: {
+    searchInput: String
+  },
   data() {
     return {
       searchTerm: ''
     };
   },
   methods: {
-    handleInput() {
-      // Emitir el término de búsqueda cada vez que el usuario escribe
-      this.$emit('search-input', this.searchTerm);
+    updateInput(event) {
+      // Emitir el nuevo valor al padre
+      this.$emit('search-input', event.target.value);
     }
   }
 };

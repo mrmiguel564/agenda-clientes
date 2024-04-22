@@ -1,14 +1,15 @@
 <template>
   <div class="hello">
     <div class="container">
-      <SearchComponent @search-input="handleSearch" />
+      <SearchComponent :search-input="searchText" @search-input="handleSearch" />
+ 
       <div class="button-group">
         <DeleteContactButton @delete-selected-items="handleDeleteFromTable" />
         <AddContactButton />
       </div>
     </div>  
     <!-- Listado -->
-    <DraggableTable :items="items" :search-term="searchTerm" ref="draggableTable" />
+    <DraggableTable :items="items" :search-term="searchText" ref="draggableTable" />
   </div>
 </template>
 
@@ -33,10 +34,15 @@ export default {
   },
   data() {
     return {
-      items: []
+      items: [],
+      searchText: ''
     };
   },
   methods: {
+    handleSearch(newSearchText) {
+      this.searchText = newSearchText;
+ 
+    },
     handleDeleteFromTable() {
       this.$refs.draggableTable.deleteSelectedItems();
     },
