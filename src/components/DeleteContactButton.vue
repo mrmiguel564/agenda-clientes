@@ -1,5 +1,5 @@
 <template>
-  <button class="trash-button" @click="handleClick">
+  <button class="trash-button" @click="handleDeleteItems">
     <div class="delete" >    
       <svg width="18.18px" height="20px" top="2px" left="2.91px" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
     
@@ -13,9 +13,9 @@
 export default {
   name: 'TrashButton',
   methods: {
-    handleClick() {
-      this.$emit('clicked'); // Emitir un evento cuando el botón es presionado
-    }
+      handleDeleteItems() {
+        this.$emit('delete-selected-items'); // Re-emitir el evento hacia arriba
+      }
   }
 };
 </script>

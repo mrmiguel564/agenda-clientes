@@ -3,12 +3,12 @@
     <div class="container">
       <SearchComponent @search-input="handleSearch" />
       <div class="button-group">
-        <DeleteContactButton />
+        <DeleteContactButton @delete-selected-items="handleDeleteFromTable" />
         <AddContactButton />
       </div>
     </div>  
     <!-- Listado -->
-    <DraggableTable />
+    <DraggableTable :items="items" :search-term="searchTerm" ref="draggableTable" />
   </div>
 </template>
 
@@ -37,6 +37,9 @@ export default {
     };
   },
   methods: {
+    handleDeleteFromTable() {
+      this.$refs.draggableTable.deleteSelectedItems();
+    },
     async fetchItems() {
       try {
         const response = await fetch('https://ubapp.unabase.cc/app/users/search/random');
@@ -58,10 +61,16 @@ export default {
       this.saveItems();
     }
   },
-/*   created() {
-    //localStorage.clear();
-    this.fetchItems();
-  } */
+  mounted() {
+    const storedItems = localStorage.getItem('tableItems');
+    if (  JSON.parse(storedItems).length === 0) {   
+      this.fetchItems();
+    } else {
+      this.items = JSON.parse(storedItems);
+    }
+  }
+
+
 }
 </script>
 
