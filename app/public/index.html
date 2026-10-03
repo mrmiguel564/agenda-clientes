@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6e54b5">
+  <title>Agenda tu hora · Clínica veterinaria</title>
+  <meta name="description" content="Agenda en línea la hora de tu mascota: consultas, urgencias, vacunas, telemedicina y más.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/landing.css">
+  <link rel="stylesheet" href="/css/booking.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container">
+      <a class="brand" href="/"><span class="brand-mark"><i class="ti ti-paw" aria-hidden="true"></i></span><span data-bind="nombre">Clínica veterinaria</span></a>
+      <nav class="nav-desktop" aria-label="Secciones">
+        <a href="#servicios">Servicios</a>
+        <a href="#especialidades">Mascotas</a>
+        <a href="#horarios">Horarios</a>
+        <a href="#faq">Preguntas</a>
+      </nav>
+      <a class="btn btn-soft btn-sm" href="/mis-horas"><i class="ti ti-calendar-user" aria-hidden="true"></i>Mis horas</a>
+      <button class="btn btn-sm btn-book" type="button" data-book>Agendar hora</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-text">
+          <span class="tag tag-ok hero-status" id="agenda-status"><i class="ti ti-circle-check" aria-hidden="true"></i>Agenda abierta</span>
+          <h1 id="hero-title">Cuidamos a tu mascota como familia</h1>
+          <p class="lead" id="hero-sub">Agenda su hora en un minuto, sin llamadas ni esperas.</p>
+          <div class="hero-chips" id="hero-chips"></div>
+          <div class="hero-cta">
+            <button class="btn" type="button" data-book id="hero-cta"><i class="ti ti-calendar-plus" aria-hidden="true"></i><span>Agenda la hora de tu mascota</span></button>
+            <a class="btn btn-ghost" href="#servicios">Ver servicios</a>
+          </div>
+          <div class="hero-today" id="hero-today"></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="blob"></div>
+          <div class="blob b2"></div>
+          <img class="float corazon" src="/img/hero/corazon.svg" alt="">
+          <img class="float conejo" src="/img/hero/conejo.svg" alt="">
+          <img class="float esteto" src="/img/hero/estetoscopio.svg" alt="">
+          <img class="float huella1" src="/img/hero/huella.svg" alt="">
+          <img class="float huella2" src="/img/hero/huella.svg" alt="">
+          <img class="float gato" src="/img/hero/gato.svg" alt="">
+          <img class="float perro" src="/img/hero/perro.svg" alt="">
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="servicios">
+      <div class="container">
+        <div class="section-head">
+          <h2>Servicios</h2>
+          <p>Toca un servicio para agendar directo.</p>
+        </div>
+        <div class="services" id="services"></div>
+      </div>
+    </section>
+
+    <section class="section alt" id="especialidades">
+      <div class="container">
+        <div class="section-head">
+          <h2>Nos adaptamos a tu mascota</h2>
+          <p>Cada paciente es distinto. Así es como lo atendemos.</p>
+        </div>
+        <div class="specs" id="specs"></div>
+      </div>
+    </section>
+
+    <section class="section" id="como">
+      <div class="container">
+        <div class="section-head"><h2>Agendar es así de simple</h2></div>
+        <div class="steps" id="steps"></div>
+      </div>
+    </section>
+
+    <section class="section alt" id="horarios">
+      <div class="container">
+        <div class="section-head"><h2>Horarios y ubicación</h2></div>
+        <div class="info-grid">
+          <div class="card"><ul class="hours" id="hours"></ul></div>
+          <div class="card">
+            <div class="contact-list" id="contact"></div>
+            <a class="btn btn-ghost btn-block" id="map-link" href="#" target="_blank" rel="noopener"><i class="ti ti-map-pin" aria-hidden="true"></i>Ver en el mapa</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head"><h2>Preguntas frecuentes</h2></div>
+        <div class="faq" id="faq-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <strong data-bind="nombre">Clínica veterinaria</strong>
+      <span id="footer-address"></span>
+      <span><a href="/privacidad">Política de privacidad</a> · <a href="/mis-horas">Mis horas</a></span>
+      <span>© <span id="year"></span> <span data-bind="razon_social"></span></span>
+    </div>
+  </footer>
+
+  <div class="mobile-cta">
+    <a class="btn btn-wa" id="wa-mobile" href="#" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></a>
+    <button class="btn" type="button" data-book><i class="ti ti-calendar-plus" aria-hidden="true"></i>Agendar hora</button>
+  </div>
+  <a class="wa-fab" id="wa-fab" href="#" target="_blank" rel="noopener" aria-label="Escribir por WhatsApp"><i class="ti ti-brand-whatsapp" aria-hidden="true"></i></a>
+
+  <script src="/js/rut.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/booking.js"></script>
+  <script src="/js/landing.js"></script>
+</body>
+</html>

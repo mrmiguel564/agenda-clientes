@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Perrito">
+  <ellipse cx="100" cy="176" rx="58" ry="10" fill="#e2d4ff" opacity=".6"/>
+  <path d="M52 70c-18 4-26 34-18 58 4 12 18 12 22 0l8-40z" fill="#b38b6d"/>
+  <path d="M148 70c18 4 26 34 18 58-4 12-18 12-22 0l-8-40z" fill="#b38b6d"/>
+  <ellipse cx="100" cy="100" rx="52" ry="50" fill="#e8c9a6"/>
+  <ellipse cx="100" cy="128" rx="30" ry="22" fill="#fff4e8"/>
+  <path d="M76 58c8-10 40-10 48 0-8 6-40 6-48 0z" fill="#d7b08d"/>
+  <circle cx="80" cy="96" r="7" fill="#2e2545"/>
+  <circle cx="120" cy="96" r="7" fill="#2e2545"/>
+  <circle cx="82.5" cy="93.5" r="2.2" fill="#fff"/>
+  <circle cx="122.5" cy="93.5" r="2.2" fill="#fff"/>
+  <ellipse cx="100" cy="116" rx="9" ry="6.5" fill="#2e2545"/>
+  <path d="M100 122v6M92 130c4 5 12 5 16 0" stroke="#2e2545" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M100 133c0 8 8 12 8 4" fill="#ff9bb5"/>
+  <circle cx="68" cy="114" r="7" fill="#ffc4d4" opacity=".7"/>
+  <circle cx="132" cy="114" r="7" fill="#ffc4d4" opacity=".7"/>
+  <path d="M62 150h76c0 0-6 16-38 16s-38-16-38-16z" fill="#9f84e0"/>
+  <circle cx="100" cy="160" r="6" fill="#ffd36e"/>
+</svg>

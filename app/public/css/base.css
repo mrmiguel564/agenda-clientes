@@ -1,0 +1,128 @@
+/* Base compartida (landing, reserva, admin). Móvil primero: se amplía con min-width. */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+}
+img, svg { max-width: 100%; display: block; }
+a { color: var(--primary); }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 .5rem; }
+p { margin: 0 0 1rem; }
+button, input, select, textarea { font: inherit; color: inherit; }
+.ti { line-height: 1; }
+
+.container { width: 100%; max-width: var(--maxw); margin: 0 auto; padding: 0 16px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.muted { color: var(--text-soft); }
+.small { font-size: 14px; }
+.hidden { display: none !important; }
+
+/* Botones */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 48px; padding: 12px 20px;
+  border: 0; border-radius: var(--radius); cursor: pointer;
+  font-weight: 700; text-decoration: none;
+  background: var(--primary); color: var(--on-primary);
+  transition: background .15s, transform .1s;
+}
+.btn:hover { background: var(--primary-hover); }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-block { width: 100%; }
+.btn-ghost { background: transparent; color: var(--primary); border: 1.5px solid var(--lila-200); }
+.btn-ghost:hover { background: var(--lila-50); }
+.btn-soft { background: var(--lila-50); color: var(--lila-700); }
+.btn-soft:hover { background: var(--lila-100); }
+.btn-danger { background: var(--danger-bg); color: var(--danger); }
+.btn-danger:hover { background: #fbd5dd; }
+.btn-sm { min-height: 38px; padding: 8px 14px; font-size: 14px; border-radius: var(--radius-sm); }
+.btn-icon { display: inline-grid; place-items: center; flex: none; min-height: 40px; width: 40px; padding: 0; border: 0; border-radius: 12px; background: transparent; color: var(--text); font-size: 22px; cursor: pointer; }
+.btn-icon:hover { background: var(--lila-50); }
+
+/* Chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; min-height: 40px;
+  border-radius: 999px; border: 1.5px solid var(--border-strong);
+  background: var(--bg); color: var(--text);
+  font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap;
+}
+.chip:hover { border-color: var(--lila-400); }
+.chip[aria-pressed='true'], .chip.is-active { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; background: var(--lila-50); color: var(--lila-700); }
+.tag-ok { background: var(--menta); color: var(--menta-ink); }
+.tag-warn { background: var(--durazno); color: var(--durazno-ink); }
+.tag-danger { background: var(--danger-bg); color: var(--danger); }
+.tag-info { background: var(--cielo); color: var(--cielo-ink); }
+
+/* Formularios */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.field label { font-weight: 700; font-size: 14px; }
+.input, .field input, .field select, .field textarea {
+  width: 100%; min-height: 48px; padding: 12px 14px;
+  border: 1.5px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--bg); font-size: 16px; /* 16px evita el zoom en iOS */
+}
+.field textarea { min-height: 90px; resize: vertical; }
+.input:focus, .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--lila-400); box-shadow: 0 0 0 3px var(--lila-50); }
+.field .hint { font-size: 13px; color: var(--text-soft); }
+.field .error, .form-error { font-size: 14px; color: var(--danger); font-weight: 600; }
+.field.is-valid input { border-color: var(--ok); }
+.field.is-invalid input { border-color: var(--danger); }
+.check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+.check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--primary); flex: none; }
+.input-wrap { position: relative; }
+.input-wrap .ti { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-size: 20px; }
+
+/* Tarjetas */
+.card { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+.icon-bubble { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; background: var(--lila-50); color: var(--primary); flex: none; }
+
+/* Modal / hoja inferior (móvil) -> diálogo centrado (escritorio) */
+.sheet-backdrop {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(46, 37, 69, .45);
+  display: flex; align-items: flex-end; justify-content: center;
+  animation: fade .15s ease-out;
+}
+.sheet {
+  width: 100%; max-height: 92vh; overflow: auto;
+  background: var(--bg); border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  padding: 20px 16px calc(20px + env(safe-area-inset-bottom));
+  animation: up .2s ease-out;
+}
+.sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.sheet-head h2 { margin: 0; font-size: 20px; }
+@media (min-width: 768px) {
+  .sheet-backdrop { align-items: center; padding: 24px; }
+  .sheet { max-width: 520px; border-radius: var(--radius-lg); padding: 24px; }
+}
+@keyframes fade { from { opacity: 0; } }
+@keyframes up { from { transform: translateY(24px); opacity: 0; } }
+
+/* Toast */
+.toast {
+  position: fixed; left: 50%; bottom: calc(var(--bar-h) + 16px); transform: translateX(-50%);
+  z-index: 80; max-width: calc(100% - 32px);
+  background: var(--text); color: #fff; padding: 12px 18px; border-radius: var(--radius);
+  font-weight: 600; box-shadow: var(--shadow); animation: up .2s ease-out;
+}
+.toast.is-error { background: var(--danger); }
+
+.spinner { width: 22px; height: 22px; border: 3px solid var(--lila-100); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { text-align: center; padding: 28px 12px; color: var(--text-soft); }
+.empty .ti { font-size: 36px; color: var(--lila-200); display: block; margin: 0 auto 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

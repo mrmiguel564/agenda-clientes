@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6e54b5">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Panel · Agenda</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+  <div id="login" class="login hidden">
+    <form class="card login-card" id="login-form" novalidate>
+      <div class="brand"><span class="brand-mark"><i class="ti ti-paw" aria-hidden="true"></i></span><span id="login-name">Panel</span></div>
+      <h1>Ingresar al panel</h1>
+      <div class="field"><label for="l-email">Correo</label><input id="l-email" type="email" autocomplete="username" inputmode="email" required></div>
+      <div class="field"><label for="l-pass">Contraseña</label><input id="l-pass" type="password" autocomplete="current-password" required></div>
+      <p class="form-error" id="login-error" role="alert"></p>
+      <button class="btn btn-block" type="submit">Ingresar</button>
+    </form>
+  </div>
+
+  <div id="shell" class="shell hidden">
+    <nav class="tabs" aria-label="Secciones">
+      <div class="side-brand"><span class="brand-mark"><i class="ti ti-paw" aria-hidden="true"></i></span><span id="side-name">Panel</span></div>
+      <button type="button" data-tab="agenda"><i class="ti ti-calendar" aria-hidden="true"></i><span>Agenda</span></button>
+      <button type="button" data-tab="horario"><i class="ti ti-clock" aria-hidden="true"></i><span>Horario</span></button>
+      <button type="button" data-tab="mascotas"><i class="ti ti-paw" aria-hidden="true"></i><span>Mascotas</span></button>
+      <button type="button" data-tab="ajustes"><i class="ti ti-settings" aria-hidden="true"></i><span>Ajustes</span></button>
+    </nav>
+    <main class="view" id="view"></main>
+  </div>
+
+  <script src="/js/rut.js"></script>
+  <script src="/js/api.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

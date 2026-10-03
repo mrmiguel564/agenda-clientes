@@ -1,0 +1,44 @@
+/* Tokens de diseño — preset veterinaria (morado/blanco pastel).
+   Para personalizar un cliente, normalmente basta con cambiar este archivo. */
+:root {
+  --bg: #ffffff;
+  --bg-soft: #faf7ff;
+  --lila-50: #f1eaff;
+  --lila-100: #e2d4ff;
+  --lila-200: #c7b2f5;
+  --lila-400: #9f84e0;
+  --lila-600: #6e54b5;
+  --lila-700: #57409a;
+
+  --menta: #d3f4e6;
+  --menta-ink: #1f6b4f;
+  --durazno: #ffe3d8;
+  --durazno-ink: #9a4a2b;
+  --cielo: #dcebff;
+  --cielo-ink: #2c5a94;
+  --rosa: #ffe0ea;
+  --rosa-ink: #9b2f55;
+
+  --text: #2e2545;
+  --text-soft: #6b6185;
+  --text-muted: #9a91b3;
+  --border: #ebe4fb;
+  --border-strong: #d8ccf5;
+  --danger: #b4344f;
+  --danger-bg: #fde8ec;
+  --ok: #1f7a57;
+
+  --primary: var(--lila-600);
+  --primary-hover: var(--lila-700);
+  --on-primary: #ffffff;
+
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 22px;
+  --shadow: 0 6px 24px rgba(110, 84, 181, 0.12);
+  --shadow-sm: 0 2px 8px rgba(110, 84, 181, 0.08);
+
+  --font: 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --maxw: 1120px;
+  --bar-h: 76px;
+}
