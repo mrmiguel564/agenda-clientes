@@ -46,7 +46,7 @@ body { background: var(--bg-soft); }
 
 .panel { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; margin-bottom: 16px; }
 .panel h2 { font-size: 17px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.day-title { font-weight: 800; margin: 18px 0 8px; color: var(--text-soft); text-transform: capitalize; }
+.day-title { font-weight: 800; margin: 18px 0 8px; color: var(--text-soft); }
 .items { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; }
 .item {
   display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
@@ -93,3 +93,6 @@ body { background: var(--bg-soft); }
 .search input { padding-left: 44px; }
 .warn-box { background: var(--durazno); color: var(--durazno-ink); border-radius: var(--radius-sm); padding: 12px; font-size: 14px; margin-bottom: 12px; }
 .bk-loading { display: flex; align-items: center; gap: 10px; color: var(--text-soft); padding: 8px 0; }
+details.more { margin: 4px 0 14px; }
+details.more summary { cursor: pointer; color: var(--primary); font-weight: 700; padding: 6px 0; }
+details.more[open] summary { margin-bottom: 8px; }
