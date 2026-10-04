@@ -7,6 +7,9 @@
   "compatibility_date": "2025-10-01",
   "compatibility_flags": ["nodejs_compat"],
 
+  // URL pública https://agenda-clientes.<subdominio>.workers.dev (se mantiene activa en cada deploy)
+  "workers_dev": true,
+
   // Páginas estáticas (landing, reserva, admin). Solo /api/* pasa por el Worker.
   "assets": {
     "directory": "./public",
