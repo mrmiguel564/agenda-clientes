@@ -1,0 +1,22 @@
+{
+  "name": "agenda-horas",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Landing + autoagendamiento de horas (v1 veterinaria) en Cloudflare Workers + D1",
+  "scripts": {
+    "build": "echo \"Sin paso de build: wrangler empaqueta al desplegar\"",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "hono": "^4.10.0",
+    "worker-mailer": "^1.2.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}

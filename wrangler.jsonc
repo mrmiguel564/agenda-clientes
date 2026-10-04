@@ -1,0 +1,43 @@
+// Worker de la agenda de horas (Cloudflare Workers + D1 + Static Assets).
+// El nombre debe coincidir con el Worker conectado a GitHub en el panel de Cloudflare.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "agenda-clientes",
+  "main": "src/index.js",
+  "compatibility_date": "2025-10-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Páginas estáticas (landing, reserva, admin). Solo /api/* pasa por el Worker.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Base de datos: sin database_id, Cloudflare la crea sola en el primer deploy
+  // (aprovisionamiento automático) y la deja vinculada a este Worker.
+  "d1_databases": [
+    { "binding": "DB", "database_name": "agenda-clientes-db" }
+  ],
+
+  // Cada 10 minutos: vence reservas sin confirmar y limpia límites.
+  "triggers": { "crons": ["*/10 * * * *"] },
+
+  "observability": { "enabled": true },
+
+  // Variables públicas. Las secretas (COOKIE_SECRET, ADMIN_PASSWORD, SMTP_PASS)
+  // se cargan en el panel: Settings → Variables and Secrets (o en .dev.vars en local).
+  "vars": {
+    "ADMIN_EMAIL": "miguel.espinoza.dev@gmail.com",
+    "OTP_ENABLED": "false",
+    "MAIL_PROVIDER": "log",
+    "MAIL_FROM_NAME": "Huellitas Vet",
+    "MAIL_FROM_EMAIL": "miguel.espinoza.dev@gmail.com",
+    "SMTP_HOST": "smtp.gmail.com",
+    "SMTP_PORT": "465",
+    "SMTP_SECURE": "true",
+    "SMTP_USER": "miguel.espinoza.dev@gmail.com"
+  }
+}

@@ -1,0 +1,8 @@
+# Copia como .dev.vars para desarrollo local (docker compose up).
+COOKIE_SECRET=un-texto-largo-y-aleatorio
+ADMIN_PASSWORD=clave-del-panel
+MAIL_PROVIDER=smtp
+SMTP_HOST=mailpit
+SMTP_PORT=1025
+SMTP_SECURE=false
+SMTP_USER=

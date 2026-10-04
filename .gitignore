@@ -1,6 +1,6 @@
 .env
+.dev.vars
+.wrangler/
 node_modules/
-app/node_modules/
-app/public/uploads/
 *.log
 .DS_Store

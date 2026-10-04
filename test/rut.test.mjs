@@ -1,6 +1,6 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const Rut = require('../public/js/rut.js');
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import Rut from '../public/js/rut.js';
 
 test('calcula el dígito verificador', () => {
   assert.equal(Rut.computeDv('12345678'), '5');

@@ -1,21 +1,13 @@
-const nodemailer = require('nodemailer');
-const { buildIcs } = require('./ics');
-const { fechaLarga, hora } = require('./util');
-
-const transport = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || 'mailpit',
-  port: Number(process.env.SMTP_PORT || 1025),
-  secure: String(process.env.SMTP_SECURE || 'false') === 'true',
-  auth: process.env.SMTP_USER ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS } : undefined,
-});
-
-const FROM = process.env.MAIL_FROM || 'Agenda <no-reply@localhost>';
-const PUBLIC_URL = (process.env.PUBLIC_URL || 'http://localhost:3000').replace(/\/$/, '');
+// Correos. MAIL_PROVIDER=smtp envía por SMTP (Gmail u otro) usando sockets TCP de Workers;
+// MAIL_PROVIDER=log solo los registra en los logs del Worker (útil mientras no hay contraseña de aplicación).
+import { WorkerMailer } from 'worker-mailer';
+import { buildIcs } from './ics.js';
+import { fechaLarga, hora, b64utf8 } from './util.js';
 
 const escHtml = (s) =>
   String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function layout(negocio, title, body) {
+function layout(negocio, title, body){
   return `<!doctype html><html><body style="margin:0;background:#FAF7FF;font-family:Arial,Helvetica,sans-serif;color:#2E2545">
   <table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px">
   <table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:16px;border:1px solid #E2D4FF">
@@ -30,23 +22,48 @@ function layout(negocio, title, body) {
   </table></td></tr></table></body></html>`;
 }
 
-function row(label, value) {
+function row(label, value){
   return `<tr><td style="padding:6px 0;color:#7A6F96;font-size:14px">${escHtml(label)}</td><td style="padding:6px 0;text-align:right;font-size:14px;font-weight:bold">${escHtml(value)}</td></tr>`;
 }
 
-async function send(opts) {
-  try {
-    await transport.sendMail({ from: FROM, ...opts });
+async function send(env, msg){
+  const provider = String(env.MAIL_PROVIDER || 'log');
+  if (provider !== 'smtp'){
+    console.log(`[mail:${provider}] para ${msg.to} · ${msg.subject}`);
     return true;
-  } catch (err) {
-    console.error('[mail] no se pudo enviar el correo:', err.message);
+  }
+  let mailer;
+  try {
+    const port = Number(env.SMTP_PORT || 465);
+    const secure = String(env.SMTP_SECURE || (port === 465 ? 'true' : 'false')) === 'true';
+    mailer = await WorkerMailer.connect({
+      host: env.SMTP_HOST,
+      port,
+      secure,
+      startTls: !secure,
+      credentials: env.SMTP_USER ? { username: env.SMTP_USER, password: env.SMTP_PASS || '' } : undefined,
+      authType: 'plain',
+    });
+    await mailer.send({
+      from: { name: env.MAIL_FROM_NAME || 'Agenda', email: env.MAIL_FROM_EMAIL || env.SMTP_USER },
+      to: { email: msg.to },
+      subject: msg.subject,
+      text: msg.text,
+      html: msg.html,
+      attachments: msg.attachments,
+    });
+    return true;
+  } catch (err){
+    console.error('[mail] no se pudo enviar el correo:', err && err.message);
     return false;
+  } finally {
+    if (mailer) await mailer.close().catch(() => {});
   }
 }
 
 // b: {id, start_at, end_at, cancel_token, servicio, mascota, tutor_nombre, email}
-function sendConfirmation(negocio, b) {
-  const link = `${PUBLIC_URL}/reserva.html?t=${encodeURIComponent(b.cancel_token)}`;
+export function sendConfirmation(env, origin, negocio, b){
+  const link = `${origin}/reserva?t=${encodeURIComponent(b.cancel_token)}`;
   const body = `
     <p style="margin:0 0 16px;font-size:15px">Hola ${escHtml(b.tutor_nombre)}, la hora de <b>${escHtml(b.mascota)}</b> quedó agendada.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #F1EAFF;border-bottom:1px solid #F1EAFF;margin-bottom:20px">
@@ -66,19 +83,19 @@ function sendConfirmation(negocio, b) {
     description: `Hora para ${b.mascota}. Ver o cancelar: ${link}`,
     location: negocio.direccion,
   });
-  return send({
+  return send(env, {
     to: b.email,
     subject: `Hora confirmada: ${b.mascota}, ${fechaLarga(b.start_at)} a las ${hora(b.start_at)}`,
     html: layout(negocio, 'Tu hora está confirmada', body),
     text: `Hora confirmada para ${b.mascota}: ${b.servicio}, ${fechaLarga(b.start_at)} a las ${hora(b.start_at)}. ${negocio.direccion}. Ver o cancelar: ${link}`,
-    attachments: [{ filename: 'hora.ics', content: ics, contentType: 'text/calendar; charset=utf-8; method=PUBLISH' }],
+    attachments: [{ filename: 'hora.ics', content: b64utf8(ics), mimeType: 'text/calendar' }],
   });
 }
 
-function sendCancellation(negocio, b) {
+export function sendCancellation(env, origin, negocio, b){
   const body = `<p style="margin:0 0 12px;font-size:15px">La hora de <b>${escHtml(b.mascota)}</b> (${escHtml(b.servicio)}) del ${escHtml(fechaLarga(b.start_at))} a las ${escHtml(hora(b.start_at))} fue cancelada.</p>
-    <p style="margin:0"><a href="${PUBLIC_URL}/#agendar" style="color:#6E54B5;font-weight:bold">Agendar una nueva hora</a></p>`;
-  return send({
+    <p style="margin:0"><a href="${origin}/#agendar" style="color:#6E54B5;font-weight:bold">Agendar una nueva hora</a></p>`;
+  return send(env, {
     to: b.email,
     subject: `Hora cancelada: ${b.mascota}, ${fechaLarga(b.start_at)}`,
     html: layout(negocio, 'Hora cancelada', body),
@@ -86,16 +103,14 @@ function sendCancellation(negocio, b) {
   });
 }
 
-function sendOtp(negocio, email, code) {
+export function sendOtp(env, negocio, email, code){
   const body = `<p style="margin:0 0 16px;font-size:15px">Usa este código para confirmar tu hora. Vence en 10 minutos.</p>
     <p style="margin:0 0 16px;font-size:32px;letter-spacing:8px;font-weight:bold;color:#6E54B5">${escHtml(code)}</p>
     <p style="margin:0;font-size:13px;color:#7A6F96">Si no intentaste agendar una hora, ignora este correo.</p>`;
-  return send({
+  return send(env, {
     to: email,
     subject: `Tu código: ${code}`,
     html: layout(negocio, 'Código de confirmación', body),
     text: `Tu código para confirmar la hora es ${code}. Vence en 10 minutos.`,
   });
 }
-
-module.exports = { sendConfirmation, sendCancellation, sendOtp };

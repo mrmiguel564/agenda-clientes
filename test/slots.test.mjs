@@ -1,10 +1,10 @@
-const test = require('node:test');
-const assert = require('node:assert/strict');
-const S = require('../src/lib/slots.js');
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as S from '../src/lib/slots.js';
 
 // Lunes 2026-10-05
 const MONDAY = '2026-10-05';
-const NOW = new Date(2026, 9, 1, 9, 0); // jueves 1 oct 09:00 local
+const NOW = S.localDate('2026-10-01', 9 * 60); // jueves 1 oct 09:00 (hora de Chile)
 
 const weekly = [
   { weekday: 1, start_time: '08:00', end_time: '13:00' },
@@ -67,7 +67,7 @@ test('reservas existentes y buffer bloquean slots', () => {
 });
 
 test('anticipación mínima', () => {
-  const now = new Date(2026, 9, 5, 9, 10); // lunes 09:10
+  const now = S.localDate(MONDAY, 9 * 60 + 10); // lunes 09:10
   const t = times(S.getSlots({ ...base, now }));
   assert.equal(t[0], '11:30'); // 09:10 + 120 min = 11:10 -> primer slot 11:30
 });
@@ -96,4 +96,10 @@ test('helpers de fecha', () => {
   assert.equal(S.weekdayOf(MONDAY), 1);
   assert.equal(S.isValidDateStr('2026-02-30'), false);
   assert.equal(S.isValidDateStr('2026-02-28'), true);
+});
+
+test('zona horaria de Chile: verano (UTC-3) e invierno (UTC-4)', () => {
+  assert.equal(S.localDate('2026-10-05', 8 * 60).toISOString(), '2026-10-05T11:00:00.000Z');
+  assert.equal(S.localDate('2026-06-01', 8 * 60).toISOString(), '2026-06-01T12:00:00.000Z');
+  assert.equal(S.dateStr(new Date('2026-10-06T02:30:00.000Z')), '2026-10-05'); // 23:30 del lunes en Chile
 });

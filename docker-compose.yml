@@ -1,41 +1,23 @@
 name: agenda-vet
 
+# Desarrollo local: el mismo Worker que corre en Cloudflare, con D1 local (wrangler dev).
+# Producción: Cloudflare Workers Builds despliega desde GitHub (ver README).
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-agenda}
-      POSTGRES_USER: ${POSTGRES_USER:-agenda}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agenda}
-      TZ: America/Santiago
-      PGTZ: America/Santiago
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-
   app:
-    build: ./app
-    restart: unless-stopped
-    env_file:
-      - path: .env
-        required: false
+    image: node:22-bookworm-slim
+    working_dir: /app
+    command: sh -c "npm install --no-audit --no-fund && npx wrangler dev --ip 0.0.0.0 --port 8787 --persist-to .wrangler/state"
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER:-agenda}:${POSTGRES_PASSWORD:-agenda}@db:5432/${POSTGRES_DB:-agenda}
-      TZ: America/Santiago
+      WRANGLER_SEND_METRICS: "false"
     ports:
-      - "${APP_PORT:-3000}:3000"
-    depends_on:
-      db:
-        condition: service_healthy
+      - "${APP_PORT:-3000}:8787"
     volumes:
-      - uploads:/app/public/uploads
+      - .:/app
+      - node_modules:/app/node_modules
+    depends_on:
+      - mailpit
 
-  # SMTP de desarrollo: captura todos los correos. UI en http://localhost:8025 (solo accesible desde este equipo)
+  # SMTP de desarrollo: captura todos los correos. UI en http://localhost:8025 (solo este equipo)
   mailpit:
     image: axllent/mailpit:latest
     restart: unless-stopped
@@ -43,27 +25,5 @@ services:
       - "127.0.0.1:8025:8025"
       - "127.0.0.1:1025:1025"
 
-  # Publicar con Cloudflare Tunnel: docker compose --profile tunnel up -d
-  # En Cloudflare, el "Public hostname" del túnel debe apuntar a http://app:3000
-  tunnel:
-    image: cloudflare/cloudflared:latest
-    profiles: ["tunnel"]
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN:-}
-    depends_on:
-      - app
-
-  # Ver la BD: docker compose --profile dev up  ->  http://localhost:8080
-  adminer:
-    image: adminer:latest
-    profiles: ["dev"]
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-
 volumes:
-  pgdata:
-  uploads:
+  node_modules:

@@ -1,7 +1,7 @@
 // Preset del rubro veterinaria. Todo lo que cambia entre rubros vive aquí.
 // Los íconos son nombres de Tabler Icons (https://tabler.io/icons).
 
-module.exports = {
+export default {
   id: 'vet',
 
   negocio: {
